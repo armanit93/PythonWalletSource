@@ -1,0 +1,27 @@
+def tokenTransaction(from_user,to_user,amount):
+
+    service = OAuth2Service(
+        client_id='<client_id>',
+        client_secret='<client_secre>',
+        authorize_url='<authorize_url>',
+        access_token_url='<access_token_url>',
+    )
+
+    url = service.get_authorize_url()
+
+    data = {
+        'grant_type': 'client_credentials',
+    }
+
+    session = service.get_auth_session(data=data, decoder=json.loads)
+
+    postData = {
+        "from": str(from_user),
+        "to": str(to_user),
+        "amount":str(amount)
+    }
+
+    r = session.put(
+        'https://hyperledger-fabric.cfapps.us10.hana.ondemand.com/api/v1/chaincodes/{}/latest/{}'
+            .format(chaincode_id,from_user),
+        postData, params={'format': 'json'})
